@@ -1,0 +1,42 @@
+RENDERER PATCH
+==============
+
+Your current Renderer.ts should draw charging stations as rectangles using the
+new width/height fields on Environment.chargingStations.
+
+Where the charging station is currently drawn as a circle/point, use this
+pattern instead (inside your existing canvas transform where x/y are grid
+coordinates):
+
+const stationWidth = station.width ?? 7;
+const stationHeight = station.height ?? 5;
+
+ctx.save();
+ctx.translate(
+  station.x * cellSize,
+  station.y * cellSize
+);
+
+// rectangular charging infrastructure
+ctx.fillRect(
+  -(stationWidth * cellSize) / 2,
+  -(stationHeight * cellSize) / 2,
+  stationWidth * cellSize,
+  stationHeight * cellSize
+);
+
+ctx.strokeRect(
+  -(stationWidth * cellSize) / 2,
+  -(stationHeight * cellSize) / 2,
+  stationWidth * cellSize,
+  stationHeight * cellSize
+);
+
+ctx.restore();
+
+Recommended visual dimensions in Environment.ts:
+  width: 7
+  height: 5
+
+The actual robot parking slots are separate from this station rectangle and
+are spaced 3 grid units apart.
